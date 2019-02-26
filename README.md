@@ -1,4 +1,4 @@
-# FirebaseAuth0WebDogs
+# Firebase Auth0 Web Client Dogs
 
 This is the web client code from a blog article describing how to link Auth0 and Firebase within an Angular app: 
 
