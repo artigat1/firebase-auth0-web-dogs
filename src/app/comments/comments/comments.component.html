@@ -1,3 +1,48 @@
-<p>
-  comments works!
-</p>
+<!-- src/app/comments/comments/comments.component.html -->
+<section class="comments py-3">
+    <h3>Comments</h3>
+
+    <ng-template #noComments>
+        <p *ngIf="loading" class="lead">
+            <app-loading [inline]="true"></app-loading>
+            Loading comments...
+        </p>
+        <app-error *ngIf="error"></app-error>
+    </ng-template>
+
+    <div *ngIf="comments$ | async; let commentsList; else noComments">
+        <ul class="list-unstyled">
+            <li *ngFor="let comment of commentsList" class="pt-2">
+                <div class="row mb-1">
+                    <div class="col">
+                        <img [src]="comment.picture" class="avatar rounded">
+                        <strong>{{ comment.user }}</strong>
+                        <small class="text-info">{{ comment.timestamp | date:'short' }}</small>
+                        <strong>
+                            <a
+                                (click)="deleteComment(comment.id)"
+                                *ngIf="canDeleteComment(comment.uid)"
+                                class="text-danger"
+                                title="Delete">&times;</a>
+                        </strong>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <p [innerHTML]="comment.text" class="comment-text rounded p-2 my-2"></p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+        <div *ngIf="auth.loggedInFirebase; else logInToComment">
+            <app-comment-form (postComment)="onPostComment($event)"></app-comment-form>
+        </div>
+
+        <ng-template #logInToComment>
+            <p *ngIf="!auth.loggedIn" class="lead">
+                Please <a (click)="auth.login()" class="text-primary">log in</a> to leave a comment.
+            </p>
+        </ng-template>
+    </div>
+</section>

@@ -53,29 +53,29 @@ export class AuthService {
         this.auth0.authorize();
     }
 
-    handleLoginCallback() {
+    async handleLoginCallback() {
         this.loading = true;
         // When Auth0 hash parsed, get profile
-        this.auth0.parseHash((err, authResult) => {
+        await this.auth0.parseHash(async (err, authResult) => {
             if (authResult && authResult.accessToken) {
                 window.location.hash = '';
                 // Store access token
                 this.accessToken = authResult.accessToken;
                 // Get user info: set up session, get Firebase token
-                this.getUserInfo(authResult);
+                await this.getUserInfo(authResult);
             } else if (err) {
-                this.router.navigate(['/']);
+                await this.router.navigate(['/']);
                 this.loading = false;
                 console.error(`Error authenticating: ${ err.error }`);
             }
         });
     }
 
-    getUserInfo(authResult) {
+    async getUserInfo(authResult) {
         // Use access token to retrieve user's profile and set session
-        this.auth0.client.userInfo(this.accessToken, (err, profile) => {
+        await this.auth0.client.userInfo(this.accessToken, async (err, profile) => {
             if (profile) {
-                this.setSession(authResult, profile);
+                await this.setSession(authResult, profile);
             } else if (err) {
                 console.warn(`Error retrieving profile: ${ err.error }`);
             }
@@ -124,7 +124,7 @@ export class AuthService {
         }
     }
 
-    logout() {
+    async logout() {
         // Ensure all auth items removed
         localStorage.removeItem('expires_at');
         localStorage.removeItem('auth_redirect');
@@ -133,12 +133,12 @@ export class AuthService {
         this.loggedIn = false;
         // Sign out of Firebase
         this.loggedInFirebase = false;
-        this.afAuth.auth.signOut();
+        await this.afAuth.auth.signOut();
         // Return to homepage
-        this.router.navigate(['/']);
+        await this.router.navigate(['/']);
     }
 
-    private setSession(authResult, profile) {
+    private async setSession(authResult, profile) {
         // Set tokens and expiration in localStorage
         const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + Date.now());
         localStorage.setItem('expires_at', expiresAt);
@@ -149,7 +149,7 @@ export class AuthService {
         // Get Firebase token
         this.getFirebaseToken();
         // Redirect to desired route
-        this.router.navigateByUrl(localStorage.getItem('auth_redirect'));
+        await this.router.navigateByUrl(localStorage.getItem('auth_redirect'));
     }
 
     private getFirebaseToken() {
