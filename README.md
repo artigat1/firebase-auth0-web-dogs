@@ -1,4 +1,11 @@
-# FirebaseAuth0WebDogs
+# Firebase Auth0 Web Client Dogs
+
+This is the web client code from a blog article describing how to link Auth0 and Firebase within an Angular app: 
+
+* [How to authenticate firebase and angular with Auth0 - Part 1](https://auth0.com/blog/how-to-authenticate-firebase-and-angular-with-auth0-part-1/) 
+* [How to authenticate firebase and angular with Auth0 - Part 2](https://auth0.com/blog/how-to-authenticate-firebase-and-angular-with-auth0-part-2/)
+
+The node server API code can be found [here](https://github.com/artigat1/firebase-auth0-nodeserver-dogs).
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.1.
 
